@@ -3,15 +3,20 @@ import numpy as np
 import parselmouth
 import pyworld as pw
 import torch
+import resampy
+
+from modules.rmvpe.inference import RMVPE
 
 # from utils.pitch_utils import interp_f0
 
 PITCH_EXTRACTORS_ID_TO_NAME = {
     1: 'parselmouth',
     2: 'harvest',
+    3: 'rmvpe',
 }
 PITCH_EXTRACTORS_NAME_TO_ID = {v: k for k, v in PITCH_EXTRACTORS_ID_TO_NAME.items()}
 
+rmvpe_model = None
 
 def norm_f0(f0, uv=None):
     if uv is None:
@@ -44,6 +49,8 @@ def get_pitch(pe, wav_data, length, hparams, speed=1, interp_uv=False):
         return get_pitch_parselmouth(wav_data, length, hparams, speed=speed, interp_uv=interp_uv)
     elif pe == 'harvest':
         return get_pitch_harvest(wav_data, length, hparams, speed=speed, interp_uv=interp_uv)
+    elif pe == 'rmvpe':
+        return get_pitch_rmvpe(wav_data, length, hparams, speed=speed, interp_uv=interp_uv)
     else:
         raise ValueError(f" [x] Unknown pitch extractor: {pe}")
 
@@ -96,4 +103,40 @@ def get_pitch_harvest(wav_data, length, hparams, speed=1, interp_uv=False):
     uv = f0 == 0
     if uv.any() and interp_uv:
         f0, uv = interp_f0(f0, uv)
+    return f0, uv
+
+def get_pitch_rmvpe(wav_data, length, hparams, speed=1, interp_uv=False):
+    global rmvpe_model
+
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    sr = hparams['audio_sample_rate']
+    hop_size = int(np.round(hparams['hop_size'] * speed))
+
+    if rmvpe_model is None:
+        rmvpe_ckpt = hparams.get('rmvpe_ckpt', 'pretrained/rmvpe/model.pt')
+        rmvpe_model = RMVPE(rmvpe_ckpt, hop_length=160)
+
+    if sr != 16000:
+        wav16k = resampy.resample(wav_data, sr, 16000)
+    else:
+        wav16k = wav_data
+
+    use_viterbi = hparams.get('use_rmvpe_viterbi', False)
+    f0 = rmvpe_model.infer_from_audio(wav16k, 16000, device=device, thred=0.03, use_viterbi=use_viterbi)
+    uv = f0 == 0
+
+    if len(f0[~uv]) > 0:
+        f0[uv] = np.interp(np.where(uv)[0], np.where(~uv)[0], f0[~uv])
+
+    rmvpe_time = 0.01 * np.arange(len(f0))
+    target_time = (np.arange(length) * hop_size) / sr
+    f0 = np.interp(target_time, rmvpe_time, f0).astype(np.float32)
+
+    uv_interp = np.interp(target_time, rmvpe_time, uv.astype(float)) > 0.5
+    f0[uv_interp] = 0
+    uv = uv_interp
+
+    if interp_uv and uv.any():
+        f0, uv = interp_f0(f0, uv)
+
     return f0, uv
