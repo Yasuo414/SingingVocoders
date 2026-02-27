@@ -2,13 +2,27 @@
 base_config:
   - configs/base_hifi.yaml
 
-data_input_path: []
-data_out_path: []
+data_input_path:
+  - /content/drive/MyDrive/PC_NSF_HiFiGAN_Finetune/Kioshi_AI
+  - /content/drive/MyDrive/PC_NSF_HiFiGAN_Finetune/HR
+  - /content/drive/MyDrive/PC_NSF_HiFiGAN_Finetune/JSUT
+  - /content/drive/MyDrive/PC_NSF_HiFiGAN_Finetune/J2
+  - /content/drive/MyDrive/PC_NSF_HiFiGAN_Finetune/GrimesAI
+  - /content/drive/MyDrive/PC_NSF_HiFiGAN_Finetune/KGuy
+
+data_out_path:
+  - /content/drive/MyDrive/PC_NSF_HiFiGAN_Finetune/Kioshi_AI
+  - /content/drive/MyDrive/PC_NSF_HiFiGAN_Finetune/HR
+  - /content/drive/MyDrive/PC_NSF_HiFiGAN_Finetune/JSUT
+  - /content/drive/MyDrive/PC_NSF_HiFiGAN_Finetune/J2
+  - /content/drive/MyDrive/PC_NSF_HiFiGAN_Finetune/GrimesAI
+  - /content/drive/MyDrive/PC_NSF_HiFiGAN_Finetune/KGuy
+
 val_num: 10
 
-pe: 'parselmouth' # 'parselmouth', 'harvest' or 'rmvpe'
-f0_min: 65
-f0_max: 1100
+pe: 'rmvpe' # 'parselmouth', 'harvest' or 'rmvpe'
+f0_min: 40
+f0_max: 1200
 
 rmvpe_ckpt: 'pretrained/rmvpe/model.pt'
 use_rmvpe_viterbi: false
@@ -16,7 +30,7 @@ use_rmvpe_viterbi: false
 aug_min: 0.9
 aug_max: 1.4
 aug_num: 1
-key_aug: false
+key_aug: true
 key_aug_prob: 0.5
 
 pc_aug: true # pc-nsf training method
