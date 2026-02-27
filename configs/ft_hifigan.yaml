@@ -6,9 +6,12 @@ data_input_path: []
 data_out_path: []
 val_num: 10
 
-pe: 'parselmouth' # 'parselmouth' or 'harvest'
+pe: 'parselmouth' # 'parselmouth', 'harvest' or 'rmvpe'
 f0_min: 65
 f0_max: 1100
+
+rmvpe_ckpt: 'pretrained/rmvpe/model.pt'
+use_rmvpe_viterbi: false
 
 aug_min: 0.9
 aug_max: 1.4
