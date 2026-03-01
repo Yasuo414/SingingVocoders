@@ -3,22 +3,24 @@ base_config:
   - configs/base_hifi.yaml
 
 data_input_path:
-  - /content/drive/MyDrive/PC_NSF_HiFiGAN_Finetune/Kioshi_AI
-  - /content/drive/MyDrive/PC_NSF_HiFiGAN_Finetune/HR
-  - /content/drive/MyDrive/PC_NSF_HiFiGAN_Finetune/JSUT
-  - /content/drive/MyDrive/PC_NSF_HiFiGAN_Finetune/J2
-  - /content/drive/MyDrive/PC_NSF_HiFiGAN_Finetune/GrimesAI
-  - /content/drive/MyDrive/PC_NSF_HiFiGAN_Finetune/KGuy
+  - /content/drive/MyDrive/data/GrimesAI
+  - /content/drive/MyDrive/data/KGuy
+  - /content/drive/MyDrive/data/Pallete
+  - /content/drive/MyDrive/data/Kioshi_AI
+  - /content/drive/MyDrive/data/HR
+  - /content/drive/MyDrive/data/JSUT
+  - /content/drive/MyDrive/data/J2
 
 data_out_path:
-  - /content/drive/MyDrive/PC_NSF_HiFiGAN_Finetune/Kioshi_AI
-  - /content/drive/MyDrive/PC_NSF_HiFiGAN_Finetune/HR
-  - /content/drive/MyDrive/PC_NSF_HiFiGAN_Finetune/JSUT
-  - /content/drive/MyDrive/PC_NSF_HiFiGAN_Finetune/J2
-  - /content/drive/MyDrive/PC_NSF_HiFiGAN_Finetune/GrimesAI
-  - /content/drive/MyDrive/PC_NSF_HiFiGAN_Finetune/KGuy
+  - /content/drive/MyDrive/data/GrimesAI
+  - /content/drive/MyDrive/data/KGuy
+  - /content/drive/MyDrive/data/Pallete
+  - /content/drive/MyDrive/data/Kioshi_AI
+  - /content/drive/MyDrive/data/HR
+  - /content/drive/MyDrive/data/JSUT
+  - /content/drive/MyDrive/data/J2
 
-val_num: 10
+val_num: 12
 
 pe: 'rmvpe' # 'parselmouth', 'harvest' or 'rmvpe'
 f0_min: 40
